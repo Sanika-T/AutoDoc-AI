@@ -1,0 +1,56 @@
+SYNTHETIC AUTOMOTIVE HIGH-LEVEL DESIGN (HLD)
+Document ID: SYN-HLD-001
+Version: 1.0
+Status: Synthetic academic example — not an official AUTOSAR specification.
+Purpose: Demonstrate document question answering and source-grounded retrieval.
+
+1. SYSTEM OVERVIEW
+The Demo Vehicle Information System (DVIS) is a fictional software design used only for this academic prototype. It collects vehicle status data and presents selected information to a dashboard. It is not intended for installation in a real vehicle.
+
+2. SOFTWARE COMPONENTS
+2.1 VehicleDataProvider
+VehicleDataProvider receives simulated vehicle status values from a test-data generator. It validates that each value has the expected data type and attaches a timestamp. It publishes normalized status messages to the VehicleStatus interface.
+
+2.2 VehicleStatusManager
+VehicleStatusManager subscribes to the VehicleStatus interface. It stores the latest simulated status values in an in-memory cache and exposes a read-only query method to the DashboardAdapter. It rejects messages that do not contain a timestamp.
+
+2.3 DashboardAdapter
+DashboardAdapter requests the latest status from VehicleStatusManager and converts the values into a dashboard-friendly data structure. It does not communicate directly with the test-data generator.
+
+2.4 DiagnosticMonitor
+DiagnosticMonitor receives simulated diagnostic events from the DiagnosticEvent interface. It records the event identifier, event time and a short description in a local demonstration log. It can publish a DiagnosticNotification when a new event is recorded.
+
+2.5 NotificationService
+NotificationService subscribes to DiagnosticNotification messages. It formats a simple notification for the demonstration dashboard. It does not send messages to external services.
+
+3. INTERFACES
+3.1 VehicleStatus
+Producer: VehicleDataProvider.
+Consumer: VehicleStatusManager.
+Payload fields: speed_kph (number), battery_voltage_v (number), timestamp_utc (string).
+Purpose: Carry simulated vehicle status values to the manager.
+
+3.2 DiagnosticEvent
+Producer: SyntheticDiagnosticGenerator.
+Consumer: DiagnosticMonitor.
+Payload fields: event_id (string), event_time_utc (string), description (string).
+Purpose: Deliver fictional diagnostic events to the diagnostic monitor.
+
+3.3 DiagnosticNotification
+Producer: DiagnosticMonitor.
+Consumer: NotificationService.
+Payload fields: event_id (string), summary (string), created_at_utc (string).
+Purpose: Notify the dashboard layer when a diagnostic event has been recorded.
+
+4. DATA FLOW
+First, the synthetic test-data generator sends a status message to VehicleDataProvider. VehicleDataProvider validates and publishes it through VehicleStatus. VehicleStatusManager caches the latest valid message. DashboardAdapter queries VehicleStatusManager when the dashboard needs refreshed status data.
+Separately, SyntheticDiagnosticGenerator emits a DiagnosticEvent. DiagnosticMonitor records the event and publishes a DiagnosticNotification. NotificationService formats the notification for the dashboard.
+
+5. VALIDATION RULES
+VehicleDataProvider checks that speed_kph and battery_voltage_v are numeric and that timestamp_utc is present. VehicleStatusManager rejects messages without timestamp_utc. These are demonstration rules only and are not automotive safety requirements.
+
+6. TESTING
+The demonstration test plan includes: valid VehicleStatus message, missing timestamp, non-numeric speed_kph, diagnostic event recording, and notification formatting. Test outcomes should be recorded by the project team during execution; this document does not claim any test has already passed.
+
+7. SECURITY AND LIMITATIONS
+This synthetic design contains no real vehicle data, proprietary interfaces or production calibration. It does not define a maximum vehicle speed, safety integrity level, cybersecurity risk classification or production deployment configuration. Any value or rule not stated in this document must be treated as unspecified.

@@ -1,0 +1,11 @@
+question,expected_answer_or_evidence,expected_behavior
+What does VehicleDataProvider do?,Receives simulated status values; validates data types; adds timestamp; publishes VehicleStatus,Answer with source citation
+Who consumes the VehicleStatus interface?,VehicleStatusManager,Answer with source citation
+What fields are in VehicleStatus?,speed_kph; battery_voltage_v; timestamp_utc,Answer with source citation
+What is the role of DashboardAdapter?,Requests latest status from VehicleStatusManager and converts it to dashboard-friendly structure,Answer with source citation
+Which component records diagnostic events?,DiagnosticMonitor,Answer with source citation
+Who consumes DiagnosticNotification?,NotificationService,Answer with source citation
+What happens when timestamp_utc is missing?,VehicleStatusManager rejects messages without timestamp_utc; VehicleDataProvider also checks presence,Answer with source citation
+What is the data flow for diagnostic notifications?,SyntheticDiagnosticGenerator -> DiagnosticMonitor -> DiagnosticNotification -> NotificationService,Answer with source citation
+What is the maximum vehicle speed?,The document does not specify a maximum speed,Should explicitly say evidence not found
+What ASIL level is assigned to this system?,No ASIL level is specified in the synthetic document,Should explicitly say evidence not found
